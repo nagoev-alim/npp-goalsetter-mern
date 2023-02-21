@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,12 +9,14 @@ import { authSelect, authStateReset, registerUser } from './authSlice.js';
 import { registerSchema } from '../../utils/validateSchema.js';
 
 import { ErrorMessage, Input, Loader } from '../../components/index.js';
+import { GrFormViewHide, GrHide } from 'react-icons/all.js';
 
 // 📦 Component - Register Form
 const RegisterForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector(authSelect.all);
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isValid }, reset } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(registerSchema),
@@ -75,15 +77,23 @@ const RegisterForm = () => {
       <ErrorMessage errors={errors} field='email' />
     </label>
     {/*  */}
-    <label className='form-group'>
+    <label className='form-group relative'>
       <Input
         className='input'
-        type='password'
+        type={showPassword ? 'text' : 'password'}
         name='password'
         placeholder='Enter your password'
         register={register}
       >
         <span className='form-group-label'>Enter your password</span>
+        <button
+          className='absolute right-2 top-[34px] z-10 sm:top-[35px]'
+          type='button'
+          onClick={() => setShowPassword(prev => !prev)}
+        >
+          {showPassword ? <GrHide size={25} className='pointer-events-none' /> :
+            <GrFormViewHide size={25} className='pointer-events-none' />}
+        </button>
       </Input>
       <ErrorMessage errors={errors} field='password' />
     </label>

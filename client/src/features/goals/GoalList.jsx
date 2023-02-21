@@ -1,9 +1,9 @@
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-import { FiX } from 'react-icons/fi';
+import { FiEdit, FiX } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { deleteGoal } from './goalsSlice.js';
+import { deleteGoal, setEditStatus } from './goalsSlice.js';
 
 // 📦 Component - GoalList
 const GoalList = ({ goals }) => (
@@ -34,8 +34,15 @@ const GoalItem = ({ goal }) => {
     toast.success(`Goal ${goal.text} deleted`);
   };
 
+  const onEdit = () => {
+    dispatch(setEditStatus({
+      isEditable: true,
+      item: goal,
+    }));
+  };
+
   return <li
-    className='grid gap-2 relative place-items-center min-h-[150px] p-3 pt-9 text-center bg-gray-100 rounded-md border-2 border-neutral-800'>
+    className='grid gap-2 relative place-items-center break-all  min-h-[150px] p-3 pt-9 text-center bg-gray-100 rounded-md border-2 border-neutral-800'>
     {/* */}
     <p className='text-sm font-semibold absolute left-3 top-3 py-0.5 px-2 bg-neutral-800 rounded-md text-white'>
       {new Date(goal.createdAt).toLocaleString('en-US', {
@@ -47,11 +54,11 @@ const GoalItem = ({ goal }) => {
     {/* */}
     <h3 className='text-lg font-bold'>{goal.text}</h3>
     {/* */}
-    <button
-      className='absolute right-2.5 top-2.5 text-red-500 font-bold'
-      onClick={onDelete}
-    >
+    <button className='absolute right-2.5 top-2.5 text-red-500 font-bold' onClick={onDelete}>
       <FiX size={25} />
+    </button>
+    <button className='absolute right-10 top-2.5 text-blue-500 font-bold' onClick={onEdit}>
+      <FiEdit size={22} />
     </button>
   </li>;
 };

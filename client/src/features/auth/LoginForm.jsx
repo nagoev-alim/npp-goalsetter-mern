@@ -21,8 +21,6 @@ const LoginForm = () => {
     defaultValues: { email: '', password: '' },
   });
 
-  console.log(auth.status);
-
   useEffect(() => {
     if (auth.error) {
       toast.error(auth.message);

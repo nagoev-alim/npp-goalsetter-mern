@@ -38,7 +38,6 @@ export const goalService = {
     try {
       const token = getState().auth.user.token;
       const { data } = await axios.post(URL, payload, headers(token));
-      console.log(data);
       return data;
     } catch (e) {
       const message = (e.response && e.response.data && e.response.data.message) || e.message || e.toString();
@@ -54,9 +53,9 @@ export const goalService = {
    */
   update: async (payload, { getState, rejectWithValue }) => {
     try {
-      // const token = getState().auth.user.token;
-      // const { data } = await axios.post(URL, payload);
-      // return data;
+      const token = getState().auth.user.token;
+      const { data } = await axios.put(`${URL}/${payload.id}`, { text: payload.text }, headers(token));
+      return data;
     } catch (e) {
       const message = (e.response && e.response.data && e.response.data.message) || e.message || e.toString();
       return rejectWithValue(message);

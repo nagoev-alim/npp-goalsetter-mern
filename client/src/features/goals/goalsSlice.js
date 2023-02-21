@@ -18,6 +18,10 @@ const initialState = {
   status: 'idle',
   error: false,
   message: '',
+  editStatus: {
+    isEditable: false,
+    item: null,
+  },
 };
 
 const goalsSlice = createSlice({
@@ -25,6 +29,9 @@ const goalsSlice = createSlice({
   initialState,
   reducers: {
     resetGoalState: () => initialState,
+    setEditStatus: (state, { payload }) => {
+      state.editStatus = payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -60,7 +67,10 @@ const goalsSlice = createSlice({
       })
       .addCase(updateGoal.fulfilled, (state, { payload }) => {
         state.status = 'success';
-        // state.goals.push(payload);
+        const index = state.goals.findIndex(goal => goal._id === payload._id);
+        const newArray = [...state.goals];
+        newArray[index].text = payload.text;
+        state.goals = newArray;
       })
       .addCase(updateGoal.rejected, (state, { payload }) => {
         state.status = 'failed';
@@ -81,62 +91,9 @@ const goalsSlice = createSlice({
         state.message = payload;
       });
   },
-  // extraReducers: {
-  //   // Get goals
-  //   [getGoals.pending]: (state) => {
-  //     state.status = 'loading';
-  //   },
-  //   [getGoals.fulfilled]: (state, { payload }) => {
-  //     state.status = 'success';
-  //     state.goals = payload;
-  //   },
-  //   [getGoals.rejected]: (state, { payload }) => {
-  //     state.status = 'failed';
-  //     state.error = true;
-  //     state.message = payload;
-  //   },
-  //   // Create goal
-  //   [createGoal.pending]: (state) => {
-  //     state.status = 'loading';
-  //   },
-  //   [createGoal.fulfilled]: (state, { payload }) => {
-  //     state.status = 'success';
-  //     state.goals.push(payload);
-  //   },
-  //   [createGoal.rejected]: (state, { payload }) => {
-  //     state.status = 'failed';
-  //     state.error = true;
-  //     state.message = payload;
-  //   },
-  //   // Update goal
-  //   [updateGoal.pending]: (state) => {
-  //     state.status = 'loading';
-  //   },
-  //   [updateGoal.fulfilled]: (state, { payload }) => {
-  //     state.status = 'success';
-  //   },
-  //   [updateGoal.rejected]: (state, { payload }) => {
-  //     state.status = 'failed';
-  //     state.error = true;
-  //     state.message = payload;
-  //   },
-  //   // Delete goal
-  //   [deleteGoal.pending]: (state) => {
-  //     state.status = 'loading';
-  //   },
-  //   [deleteGoal.fulfilled]: (state, { payload }) => {
-  //     state.status = 'success';
-  //     state.goals = state.goals.filter(goals => goals._id !== payload);
-  //   },
-  //   [deleteGoal.rejected]: (state, { payload }) => {
-  //     state.status = 'failed';
-  //     state.error = true;
-  //     state.message = payload;
-  //   },
-  // },
 });
 
-export const { resetGoalState } = goalsSlice.actions;
+export const { resetGoalState, setEditStatus } = goalsSlice.actions;
 export const goalsReducer = goalsSlice.reducer;
 export const goalsSelect = {
   all: ({ goals }) => goals,
