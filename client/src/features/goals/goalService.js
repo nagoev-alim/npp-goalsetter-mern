@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const URL = 'http://localhost:5000/api/goals';
+// const URL = 'http://localhost:5000/api/goals';
+const URL = '/api/goals';
 
 const headers = (token) => ({
   headers: {
